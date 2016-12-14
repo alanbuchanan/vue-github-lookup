@@ -1,6 +1,6 @@
-# y
+# vue-github-lookup
 
-> y
+> vue-github-lookup
 
 ## Build Setup
 

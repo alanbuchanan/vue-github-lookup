@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <form @submit.prevent="submit">
       <input v-model="inputValue" type="text" placeholder="Enter a GitHub username...">
       <button>Go!</button>
@@ -27,6 +26,7 @@ Vue.use(VueAxios, axios)
 
 export default {
   name: 'app',
+
   data() {
     return {
       inputValue: '',
@@ -39,7 +39,6 @@ export default {
   },
 
   methods: {
-
     submit() {
       if (!!this.inputValue) {
         const api = `${this.urlBase}/${this.inputValue}`
@@ -51,7 +50,6 @@ export default {
     fetchUser(api) {
       Vue.axios.get(api).then((response) => {
         const { data } = response
-        console.warn('DATA:', response.data)
         
         this.inputValue = ''
         this.username = data.login
@@ -59,12 +57,13 @@ export default {
 
         this.fetchFollowers()
         this.fetchFaveLang()
+      }).catch(error => {
+        console.warn('ERROR:', error)
       })
     },
 
     fetchFollowers() {
       Vue.axios.get(`${this.urlBase}/${this.username}/followers`).then(followersResponse => {
-        console.log(followersResponse)
         this.followers = followersResponse.data.map(follower => {
           return follower.login
         })
@@ -78,7 +77,10 @@ export default {
         })
 
         // I stole this:
-        this.faveLang = _.chain(langs).countBy().toPairs().maxBy(_.last).head().value()
+        const faveLang = _.chain(langs).countBy().toPairs().maxBy(_.last).head().value()
+        if (faveLang !== 'null') {
+          this.faveLang = faveLang
+        }
       })
     }
   }
@@ -95,15 +97,15 @@ body
   flex-flow column
   font-family Comic Sans MS
 
-h1
-  font-size 44px
-
 input
   width 320px
 
 input,
 button
   font-size 25px
+
+h1
+  font-size 44px
 
 .avatar
   height 200px
