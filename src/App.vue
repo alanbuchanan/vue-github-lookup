@@ -76,7 +76,7 @@ export default {
           return repo.language
         })
 
-        // I stole this:
+        // Get most commonly occurring string from array
         const faveLang = _.chain(langs).countBy().toPairs().maxBy(_.last).head().value()
         if (faveLang !== 'null') {
           this.faveLang = faveLang
